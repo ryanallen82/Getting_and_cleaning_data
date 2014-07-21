@@ -1,0 +1,9 @@
+{
+    "path" : "~/R Workspace/UCI HAR Dataset/train",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

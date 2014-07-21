@@ -1,0 +1,17 @@
+{
+    "contents" : "train.x = read.table('./train/X_train.txt')\ntest.x = read.table('./test/X_test.txt')\ntrain.y = read.table('./train/y_train.txt')\ntest.y = read.table('./test/y_test.txt')\n\nsubject_train = read.table('./train/subject_train.txt')\nsubject_test = read.table('./test/subject_test.txt')\n\nactivity_labels = read.table('activity_labels.txt')\nfeatures = read.table('features.txt')\n\n# Merge the training and test sets\nall.x = rbind(train.x,test.x)\n\n# Extract the mean and sd for each measure\n\ncolnames(all.x) = c(as.character(features[,2]))\nMean = grep(\"mean()\", colnames(all.x),fixed = TRUE)\nSD = grep(\"std()\",colnames(all.x),fixed = TRUE)\n\nMeanSD = all.x[,c(Mean,SD)]\n\n# Add the descriptive activity names to the data set\n\nall.y = rbind(train.y,test.y)\nall.activity = cbind(all.y,MeanSD)\ncolnames(all.activity)[1] = \"Activity\"\n\n# Labels the data with activity names\n\nactivity_labels[,2] = as.character(activity_labels[,2])\n\nfor (i in 1:length(all.activity[,1])){\n    all.activity[i,1] = activity_labels[all.activity[i,1],2]\n}\n\n# Create a data set with the average of each variable for each activity\nsubject.all = rbind(subject_train,subject_test)\nall = cbind(subject.all,all.activity)\n\ncolnames(all)[1] = \"Subject\"\ntidy.data = aggregate( all[,3] ~ Subject+Activity, data = all, FUN=\"mean\")\n\nfor (i in 4:ncol(all)){\n    tidy.data[,i] = aggregate(all[,i] ~ Subject+Activity, data = all, FUN = \"mean\")[,3]\n}\n\ncolnames(tidy.data)[3:ncol(tidy.data)] = colnames(MeanSD)\n\nwrite.table(tidy.data, file = \"data.txt\")",
+    "created" : 1405966656152.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "17236698",
+    "id" : "ABC28FDA",
+    "lastKnownWriteTime" : 1405967814,
+    "path" : "~/R Workspace/UCI HAR Dataset/run_analysis.R",
+    "project_path" : "run_analysis.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
